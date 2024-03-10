@@ -3,40 +3,43 @@ jQuery(document).ready(function($) {
   const urlParams = new URLSearchParams(window.location.search);
   const carBrand = urlParams.get('car_brand');
   const carModel = urlParams.get('car_model');
+  const carBrandField = $('.car_brand_select');
+  const carModelField = $('#car_model_select');
 
   if(carBrand) {
-    $('#car_brand_select').val(carBrand).trigger('change');
+    carBrandField.val(carBrand).trigger('change');
   }
 
-  $('.car_brand_select').change(function() {
+  carBrandField.change(function() {
     let brandSlug = $(this).val();
+    let modelSlug = carModelField.val();
+
     if (brandSlug) {
       $.ajax({
         url: ccc_ajax_obj.ajaxurl,
-        type: 'POST',
+        type: 'GET',
         data: {
           action: 'ccc_load_models',
           carBrand: brandSlug
         },
         success: function(response) {
-          $('#car_model_select').html(response).prop('disabled', false);
+          carModelField.html(response).prop('disabled', false);
         }
       });
     } else {
-      $('#car_model_select').html('<option value="">Select Car Model</option>').prop('disabled', true);
+      carModelField.html('<option value="">Select Car Model</option>').prop('disabled', true);
     }
+    updateUrlParam(brandSlug, modelSlug);
   });
 
 
-
-  $('#car_model_select').change(function() {
-    let brandSlug = $('#car_brand_select').val();
+  carModelField.change(function() {
+    let brandSlug = carBrandField.val();
     let modelSlug = $(this).val();
 
-    // AJAX request to filter products
     $.ajax({
       url: ccc_ajax_obj.ajaxurl,
-      type: 'POST',
+      type: 'GET',
       data: {
         action: 'ccc_filter_products',
         carBrand: brandSlug,
@@ -46,10 +49,7 @@ jQuery(document).ready(function($) {
         $('.products').html(response);
       }
     });
-
-    let newUrl = updateUrlParameter(window.location.href, 'car_brand', brandSlug);
-    newUrl = updateUrlParameter(newUrl, 'car_model', modelSlug);
-    window.history.pushState({path:newUrl}, '', newUrl);
+    updateUrlParam(brandSlug, modelSlug);
   });
 
 
@@ -65,10 +65,14 @@ jQuery(document).ready(function($) {
     });
   });
 
-
-
 });
 
+
+function updateUrlParam(brandSlug, modelSlug) {
+  let newUrl = updateUrlParameter(window.location.href, 'car_brand', brandSlug);
+  newUrl = updateUrlParameter(newUrl, 'car_model', modelSlug);
+  window.history.pushState({path:newUrl}, '', newUrl);
+}
 
 function updateUrlParameter(url, paramName, paramValue) {
   if (paramValue == null) paramValue = '';
