@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+
   const urlParams = new URLSearchParams(window.location.search);
   const carBrand = urlParams.get('car_brand');
   const carModel = urlParams.get('car_model');
@@ -50,6 +51,20 @@ jQuery(document).ready(function($) {
     newUrl = updateUrlParameter(newUrl, 'car_model', modelSlug);
     window.history.pushState({path:newUrl}, '', newUrl);
   });
+
+
+  const carBrandSelects = document.querySelectorAll('.car_brand_select');
+
+  carBrandSelects.forEach(function(select) {
+    select.addEventListener('change', function() {
+      document.querySelectorAll('.car-model label').forEach(function(label) {
+        label.classList.remove('active');
+      });
+      const label = this.parentElement;
+      label.classList.add('active');
+    });
+  });
+
 
 
 });
