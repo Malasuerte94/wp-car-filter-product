@@ -27,7 +27,11 @@ class Car_Brand_Model_Filter_Widget extends WP_Widget
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
+        $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
 
+        foreach ($terms as $term) {
+            var_dump(get_term_meta($term->term_id, 'ccc_taxonomy_image', true));
+        }
         ?>
         <form action="<?php echo esc_url(home_url('/')); ?>" method="GET">
             <select name="car_brand" id="car_brand_select">
