@@ -1,0 +1,20 @@
+.car-model .hidden {
+    display: none;
+}
+.car-model img {
+    width: 40px;
+    border-radius: 50px;
+}
+.car-model {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.car-model input:focus + .input-label {
+    color: blue; /* For example */
+}
+
+.car-model label:hover {
+    color: red;
+}

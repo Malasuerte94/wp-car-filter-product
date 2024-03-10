@@ -27,23 +27,19 @@ class Car_Brand_Model_Filter_Widget extends WP_Widget
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
-        $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
-
-        foreach ($terms as $term) {
-            var_dump(get_term_meta($term->term_id, 'ccc_taxonomy_image', true));
-        }
         ?>
         <form action="<?php echo esc_url(home_url('/')); ?>" method="GET">
-            <select name="car_brand" id="car_brand_select">
-                <option value=""><?php _e('Select Car Brand', 'textdomain'); ?></option>
-                <?php
-                $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
-                foreach ($terms as $term) {
-                    echo '<option value="' . $term->slug . '">' . $term->name . '</option>';
-                }
-                ?>
-            </select>
-
+            <div class="car-model">
+            <?php
+            $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
+            foreach ($terms as $term) {
+                echo '<label>';
+                echo '<input class="car_brand_select hidden" type="radio" id="car_brand_select'.$term->slug.'" name="car_brand" value="'
+                    .$term->slug.'" />';
+                echo '<img alt="'.$term->slug.'" src="'.get_term_meta($term->term_id, 'ccc_taxonomy_image', true).'"/></label>';
+            }
+            ?>
+            </div>
             <select name="car_model" id="car_model_select" disabled>
                 <option value=""><?php _e('Select Car Model', 'textdomain'); ?></option>
                 <!-- Options will be loaded via AJAX -->

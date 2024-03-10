@@ -7,8 +7,8 @@ jQuery(document).ready(function($) {
     $('#car_brand_select').val(carBrand).trigger('change');
   }
 
-  $('#car_brand_select').change(function() {
-    let brandSlug = $(this).val(); // Get selected car brand slu
+  $('.car_brand_select').change(function() {
+    let brandSlug = $(this).val();
     if (brandSlug) {
       $.ajax({
         url: ccc_ajax_obj.ajaxurl,

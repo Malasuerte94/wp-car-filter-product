@@ -77,7 +77,7 @@ function ccc_filter_products_ajax() {
     }
 
     wp_reset_postdata();
-    wp_die(); // always end ajax function with this
+    wp_die();
 }
 
 add_action('wp_ajax_ccc_filter_products', 'ccc_filter_products_ajax');
@@ -91,6 +91,7 @@ add_action('wp_ajax_nopriv_ccc_filter_products', 'ccc_filter_products_ajax');
 function ccc_enqueue_scripts(): void
 {
     wp_enqueue_script('ccc-ajax-script', plugin_dir_url(__FILE__) . 'js/ccc-ajax.js', array('jquery'));
+    wp_enqueue_style('ccc-css', plugin_dir_url(__FILE__) . 'css/front-css.css');
     wp_localize_script('ccc-ajax-script', 'ccc_ajax_obj', array('ajaxurl' => admin_url('admin-ajax.php')));
 }
 
