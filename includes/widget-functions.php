@@ -1,7 +1,7 @@
 <?php
 
 // Register Custom Widget
-function ccc_register_car_brand_filter_widget()
+function ccc_register_car_brand_filter_widget(): void
 {
     register_widget('Car_Brand_Model_Filter_Widget');
 }
@@ -21,7 +21,7 @@ class Car_Brand_Model_Filter_Widget extends WP_Widget
         );
     }
 
-    public function widget($args, $instance)
+    public function widget($args, $instance): void
     {
         echo $args['before_widget'];
         if (!empty($instance['title'])) {
@@ -70,7 +70,7 @@ class Car_Brand_Model_Filter_Widget extends WP_Widget
     }
 
     // Updating widget replacing old instances with new
-    public function update($new_instance, $old_instance)
+    public function update($new_instance, $old_instance): array
     {
         $instance = array();
         $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';

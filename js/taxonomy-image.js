@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
     });
 
     image.on('select', function() {
-      var attachment = image.state().get('selection').first().toJSON();
+      let attachment = image.state().get('selection').first().toJSON();
       inputField.val(attachment.url);
       button.siblings('.ccc_taxonomy_image_preview').html('<img src="' + attachment.url + '" style="max-width: 100px; max-height: 100px;" />');
     });
