@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Custom Car Categories
-Description: Adds custom taxonomy for Car Brands and Models to WooCommerce products, with support for brand images via ACF.
-Version: 1.0
-Author: Your Name
+Description: Adds custom taxonomy for Car Brands and Models to WooCommerce products
+Version: 1.1
+Author: MalaTheMan / MT.GG
 */
 
 if (!defined('ABSPATH')) {
