@@ -10,127 +10,8 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-// Register Taxonomies
-function ccc_register_taxonomies()
-{
-    // Car Brands
-    $labels_brand = array(
-        'name' => 'Car Brands',
-        'singular_name' => 'Car Brand',
-        'search_items' => 'Search Car Brands',
-        'all_items' => 'All Car Brands',
-        'parent_item' => 'Parent Car Brand',
-        'parent_item_colon' => 'Parent Car Brand:',
-        'edit_item' => 'Edit Car Brand',
-        'update_item' => 'Update Car Brand',
-        'add_new_item' => 'Add New Car Brand',
-        'new_item_name' => 'New Car Brand Name',
-        'menu_name' => 'Car Brands',
-    );
-
-    $args_brand = array(
-        'hierarchical' => true,
-        'labels' => $labels_brand,
-        'show_ui' => true,
-        'show_admin_column' => true,
-        'query_var' => true,
-        'rewrite' => array('slug' => 'car-brand'),
-        'show_in_rest' => true, // Enable Gutenberg support
-    );
-
-    register_taxonomy('car_brand', array('product'), $args_brand);
-
-}
-
-add_action('init', 'ccc_register_taxonomies');
-
-
-// Register Custom Widget
-function ccc_register_car_brand_filter_widget()
-{
-    register_widget('Car_Brand_Model_Filter_Widget');
-}
-
-add_action('widgets_init', 'ccc_register_car_brand_filter_widget');
-
-
-class Car_Brand_Model_Filter_Widget extends WP_Widget
-{
-
-    public function __construct()
-    {
-        parent::__construct(
-            'car_brand_model_filter_widget', // Base ID
-            'Car Brand & Model Filter', // Name
-            array('description' => __('A widget to filter products by Car Brand and Model.', 'textdomain'),) // Args
-        );
-    }
-
-    public function widget($args, $instance)
-    {
-        echo $args['before_widget'];
-        if (!empty($instance['title'])) {
-            echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
-        }
-
-        ?>
-        <form action="<?php echo esc_url(home_url('/')); ?>" method="GET">
-            <select name="car_brand" id="car_brand_select">
-                <option value=""><?php _e('Select Car Brand', 'textdomain'); ?></option>
-                <?php
-                $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
-                foreach ($terms as $term) {
-                    echo '<option value="' . $term->slug . '">' . $term->name . '</option>';
-                }
-                ?>
-            </select>
-
-            <select name="car_model" id="car_model_select" disabled>
-                <option value=""><?php _e('Select Car Model', 'textdomain'); ?></option>
-                <!-- Options will be loaded via AJAX -->
-            </select>
-        </form>
-        <?php
-
-        echo $args['after_widget'];
-    }
-
-    // Widget Backend
-    public function form($instance): void
-    {
-        if (isset($instance['title'])) {
-            $title = $instance['title'];
-        } else {
-            $title = __('Car Brands', 'textdomain');
-        }
-        // Widget admin form
-        ?>
-        <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
-                   name="<?php echo $this->get_field_name('title'); ?>" type="text"
-                   value="<?php echo esc_attr($title); ?>"/>
-        </p>
-        <?php
-    }
-
-    // Updating widget replacing old instances with new
-    public function update($new_instance, $old_instance)
-    {
-        $instance = array();
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        return $instance;
-    }
-}
-
-// Register and load the widget
-function ccc_load_widget(): void
-{
-    register_widget('car_brand_model_filter_widget');
-}
-
-add_action('widgets_init', 'ccc_load_widget');
-
+require_once plugin_dir_path(__FILE__) . 'includes/register-tax-functions.php';
+require_once plugin_dir_path(__FILE__) . 'includes/widget-functions.php';
 
 /**
  * Return car models in the form
@@ -196,16 +77,11 @@ function ccc_filter_products_ajax() {
     }
 
     wp_reset_postdata();
-    wp_die(); // always end ajax function with this
+    wp_die();
 }
 
 add_action('wp_ajax_ccc_filter_products', 'ccc_filter_products_ajax');
 add_action('wp_ajax_nopriv_ccc_filter_products', 'ccc_filter_products_ajax');
-
-
-
-
-
 
 
 /**
@@ -215,6 +91,7 @@ add_action('wp_ajax_nopriv_ccc_filter_products', 'ccc_filter_products_ajax');
 function ccc_enqueue_scripts(): void
 {
     wp_enqueue_script('ccc-ajax-script', plugin_dir_url(__FILE__) . 'js/ccc-ajax.js', array('jquery'));
+    wp_enqueue_style('ccc-css', plugin_dir_url(__FILE__) . 'css/front-css.css');
     wp_localize_script('ccc-ajax-script', 'ccc_ajax_obj', array('ajaxurl' => admin_url('admin-ajax.php')));
 }
 
