@@ -12,6 +12,9 @@
     align-items: center;
     justify-content: center;
     align-content: center;
+    height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .car-model label {

@@ -33,7 +33,6 @@ class Car_Brand_Model_Filter_Widget extends WP_Widget
             <?php
             $terms = get_terms(array('taxonomy' => 'car_brand', 'hide_empty' => false, 'parent' => 0));
             foreach ($terms as $term) {
-                echo '<a href="?car_brand='.$term->slug.'">brand</a>';
                 echo '<label>';
                 echo '<input class="car_brand_select hidden" type="radio" id="car_brand_select'.$term->slug.'" name="car_brand" value="'
                     .$term->slug.'" />';
