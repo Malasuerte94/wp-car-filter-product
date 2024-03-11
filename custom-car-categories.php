@@ -2,7 +2,7 @@
 /*
 Plugin Name: Custom Car Categories
 Description: Adds custom taxonomy for Car Brands and Models to WooCommerce products
-Version: 1.1
+Version: 1.2
 Author: MalaTheMan / MT.GG
 */
 
