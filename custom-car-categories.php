@@ -19,14 +19,13 @@ require_once plugin_dir_path(__FILE__) . 'includes/widget-functions.php';
  */
 function ccc_load_models_ajax()
 {
-    $parent_brand_slug = $_POST['carBrand'];
+    $parent_brand_slug = $_GET['carBrand'];
     $models = get_terms(array(
         'taxonomy' => 'car_brand',
         'hide_empty' => false,
         'parent' => get_term_by('slug', $parent_brand_slug, 'car_brand')->term_id,
     ));
 
-    echo '<option value="">Wait</option>';
     foreach ($models as $model) {
         echo '<option value="' . $model->slug . '">' . $model->name . '</option>';
     }
@@ -43,13 +42,13 @@ add_action('wp_ajax_nopriv_ccc_load_models', 'ccc_load_models_ajax');
  * @return void
  */
 function ccc_filter_products_ajax() {
-    $carBrand = $_POST['carBrand'];
-    $carModel = $_POST['carModel'];
 
-    // Modify WP_Query as needed to filter products based on car brand and model
+    $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
+    $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
+
     $args = array(
         'post_type' => 'product',
-        'posts_per_page' => -1, // or any number
+        'posts_per_page' => -1,
         'tax_query' => array(
             'relation' => 'AND',
             array(
@@ -57,23 +56,26 @@ function ccc_filter_products_ajax() {
                 'field'    => 'slug',
                 'terms'    => $carBrand,
             ),
-            array(
-                'taxonomy' => 'car_brand',
-                'field'    => 'slug',
-                'terms'    => $carModel,
-            ),
         ),
     );
 
+    if ($carModel) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'car_brand',
+            'field'    => 'slug',
+            'terms'    => $carModel,
+        );
+    }
+
     $query = new WP_Query($args);
 
-    if($query->have_posts()) {
-        while($query->have_posts()) {
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
             $query->the_post();
-            wc_get_template_part('content', 'product'); // Use WooCommerce template to display products
+            wc_get_template_part('content', 'product');
         }
     } else {
-        echo '<p>'.__('No products found', 'textdomain').'</p>';
+        echo '<p>' . __('No products found', 'textdomain') . '</p>';
     }
 
     wp_reset_postdata();
