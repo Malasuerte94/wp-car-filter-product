@@ -19,15 +19,18 @@
 
 
 .car-model::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
+    border-radius:10px;
 }
 
 .car-model::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius:10px;
 }
 
 .car-model::-webkit-scrollbar-thumb {
     background: #888;
+    border-radius:10px;
 }
 
 .car-model::-webkit-scrollbar-thumb:hover {
