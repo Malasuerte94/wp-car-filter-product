@@ -17,6 +17,23 @@
     overflow-y: auto;
 }
 
+
+.car-model::-webkit-scrollbar {
+    width: 10px;
+}
+
+.car-model::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.car-model::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.car-model::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 .car-model label {
     display: flex;
     align-items: center;
