@@ -135,7 +135,7 @@ function custom_taxonomy_filter($query) {
         }
     }
 }
-add_action('pre_get_posts', 'custom_taxonomy_filter');
+//add_action('pre_get_posts', 'custom_taxonomy_filter');
 
 
 
