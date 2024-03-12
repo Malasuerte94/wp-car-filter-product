@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
 
 
   carModelField.change(function() {
-    let brandSlug = carBrandField.val();
+    let brandSlug = document.querySelector('input[name="car_brand"]:checked').value;
     let modelSlug = $(this).val();
 
     $.ajax({

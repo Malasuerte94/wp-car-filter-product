@@ -26,6 +26,7 @@ function ccc_load_models_ajax()
         'parent' => get_term_by('slug', $parent_brand_slug, 'car_brand')->term_id,
     ));
 
+    echo '<option value="">'__("Alege modelul masinii")'</option>';
     foreach ($models as $model) {
         echo '<option value="' . $model->slug . '">' . $model->name . '</option>';
     }
