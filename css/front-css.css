@@ -5,14 +5,15 @@
     width: 50px;
 }
 .car-model {
-    padding: 1rem;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     align-items: center;
     justify-content: center;
-    height: 500px;
-    max-height: 500px;
+    height: 375px;
+    max-height: 375px;
     overflow-y: auto;
 }
 
