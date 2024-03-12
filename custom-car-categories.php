@@ -85,37 +85,54 @@ function ccc_filter_products_ajax() {
 add_action('wp_ajax_ccc_filter_products', 'ccc_filter_products_ajax');
 add_action('wp_ajax_nopriv_ccc_filter_products', 'ccc_filter_products_ajax');
 
+
+
 /**
  * Filter products by url query
  */
-function custom_taxonomy_filter($query): void
-{
+function custom_taxonomy_filter($query) {
     if ( !is_admin() && $query->is_main_query() && is_post_type_archive('product') ) {
         $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
         $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
 
-        $args = array(
-            'post_type' => 'product',
-            'posts_per_page' => -1,
-            'tax_query' => array(
-                'relation' => 'AND',
+        // Constructing tax query for car brand
+        if ($carBrand) {
+            $carBrandQ = array(
                 array(
                     'taxonomy' => 'car_brand',
                     'field'    => 'slug',
                     'terms'    => $carBrand,
                 ),
-            ),
-        );
-
-        if ($carModel) {
-            $args['tax_query'][] = array(
-                'taxonomy' => 'car_brand',
-                'field'    => 'slug',
-                'terms'    => $carModel,
             );
         }
 
-        $query->query_vars = $args;
+        // Constructing tax query for car model
+        if ($carModel) {
+            $carModelQ = array(
+                array(
+                    'taxonomy' => 'car_brand',
+                    'field'    => 'slug',
+                    'terms'    => $carModel,
+                ),
+            );
+        }
+
+        // Combining brand and model tax queries if both are present
+        if (isset($carBrandQ) && isset($carModelQ)) {
+            $tax_query = array(
+                'relation' => 'AND',
+                $carBrandQ,
+                $carModelQ,
+            );
+        } elseif (isset($carBrandQ)) {
+            $tax_query = $carBrandQ;
+        } elseif (isset($carModelQ)) {
+            $tax_query = $carModelQ;
+        }
+
+        if (isset($tax_query)) {
+            $query->set('tax_query', $tax_query);
+        }
     }
 }
 add_action('pre_get_posts', 'custom_taxonomy_filter');
