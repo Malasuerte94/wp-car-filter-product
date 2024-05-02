@@ -178,46 +178,7 @@ add_action('init', 'ccc_register_shortcode');
  * @param WP_Query $query
  * @return void
  */
-function ccc_add_selected_filters($query): void
-{
-    $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
-    $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
 
-    if ($carBrand && $carModel) {
-        $selectedBrand = get_term_by('slug', $carBrand, 'car_brand');
-        $selectedModel = get_term_by('slug', $carModel, 'car_brand');
-
-        // Add the selected car brand filter
-        $brandFilter = new WC_Query_Meta_Filter('filter_car_brand', 'Car Brand', 'taxonomy', 'car_brand');
-        $brandFilter->add_filter_setting('is_hierarchy', true);
-        $brandFilter->add_filter_setting('filter_term', $selectedBrand->slug);
-        $brandFilter->add_filter_setting('filter_name', $selectedBrand->name);
-        $query->add_filter($brandFilter);
-
-        // Add the selected car model filter
-        $modelFilter = new WC_Query_Meta_Filter('filter_car_model', 'Car Model', 'taxonomy', 'car_brand');
-        $modelFilter->add_filter_setting('is_hierarchy', true);
-        $modelFilter->add_filter_setting('filter_term', $selectedModel->slug);
-        $modelFilter->add_filter_setting('filter_name', $selectedModel->name);
-        $query->add_filter($modelFilter);
-    }
-}
-
-if (isset($carBrandQ) && isset($carModelQ)) {
-    $tax_query = array(
-        'relation' => 'AND',
-        $carBrandQ,
-        $carModelQ,
-    );
-} elseif (isset($carBrandQ)) {
-    $tax_query = $carBrandQ;
-} elseif (isset($carModelQ)) {
-    $tax_query = $carModelQ;
-}
-
-if (isset($tax_query)) {
-    $query->set('tax_query', $tax_query);
-}
 
 /**
  * Add the selected filters to the WooCommerce product archive page
@@ -229,10 +190,6 @@ function ccc_add_selected_filters_to_archive(): void
     add_action('woocommerce_product_query', 'ccc_add_selected_filters');
 }
 add_action('init', 'ccc_add_selected_filters_to_archive');
-
-
-
-
 
 
 
