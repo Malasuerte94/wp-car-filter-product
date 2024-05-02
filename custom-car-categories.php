@@ -184,20 +184,29 @@ function ccc_add_custom_taxonomy_filters($query): void
         $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
         $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
 
+        $tax_query = array();
+
         // Add car brand taxonomy filter
-        $brandFilter = new WC_Query_Meta_Filter('filter_car_brand', 'Car Brand', 'taxonomy', 'car_brand');
-        $brandFilter->add_filter_setting('is_taxonomy_attribute', true);
         if ($carBrand) {
-            $brandFilter->add_filter_setting('filter_term', $carBrand);
-            $query->add_filter($brandFilter);
+            $tax_query[] = array(
+                'taxonomy' => 'car_brand',
+                'field' => 'slug',
+                'terms' => $carBrand,
+            );
         }
 
         // Add car model taxonomy filter
-        $modelFilter = new WC_Query_Meta_Filter('filter_car_model', 'Car Model', 'taxonomy', 'car_brand');
-        $modelFilter->add_filter_setting('is_taxonomy_attribute', true);
         if ($carModel) {
-            $modelFilter->add_filter_setting('filter_term', $carModel);
-            $query->add_filter($modelFilter);
+            $tax_query[] = array(
+                'taxonomy' => 'car_brand',
+                'field' => 'slug',
+                'terms' => $carModel,
+            );
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $query->set('tax_query', $tax_query);
         }
     }
 }
