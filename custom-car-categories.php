@@ -147,6 +147,24 @@ add_action('pre_get_posts', 'custom_taxonomy_filter');
 function ccc_render_filter_widget(): string
 {
     ob_start();
+    $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
+    $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
+
+    if ($carBrand || $carModel) {
+        echo '<div class="ccc-selected-filters">';
+
+        if ($carBrand) {
+            $selectedBrand = get_term_by('slug', $carBrand, 'car_brand');
+            echo '<span class="ccc-selected-brand">' . $selectedBrand->name . '</span>';
+        }
+
+        if ($carModel) {
+            $selectedModel = get_term_by('slug', $carModel, 'car_brand');
+            echo '<span class="ccc-selected-model">&nbsp;&gt;&nbsp;' . $selectedModel->name . '</span>';
+        }
+
+        echo '</div>';
+    }
     the_widget('Car_Brand_Model_Filter_Widget');
     return ob_get_clean();
 }
@@ -165,60 +183,6 @@ add_action('init', 'ccc_register_shortcode');
  * Add the required files
  * @return void
  */
-
-
-
-
-
-
-
-/**
- * Add car brand and model as custom taxonomies to WooCommerce filter widget
- *
- * @param WP_Query $query
- * @return void
- */
-function ccc_add_custom_taxonomy_filters($query): void
-{
-    if (!is_admin() && $query->is_main_query() && is_post_type_archive('product')) {
-        $carBrand = isset($_GET['carBrand']) ? sanitize_text_field($_GET['carBrand']) : '';
-        $carModel = isset($_GET['carModel']) ? sanitize_text_field($_GET['carModel']) : '';
-
-        $tax_query = array();
-
-        // Add car brand taxonomy filter
-        if ($carBrand) {
-            $tax_query[] = array(
-                'taxonomy' => 'car_brand',
-                'field' => 'slug',
-                'terms' => $carBrand,
-            );
-        }
-
-        // Add car model taxonomy filter
-        if ($carModel) {
-            $tax_query[] = array(
-                'taxonomy' => 'car_brand',
-                'field' => 'slug',
-                'terms' => $carModel,
-            );
-        }
-
-        if (!empty($tax_query)) {
-            $tax_query['relation'] = 'AND';
-            $query->set('tax_query', $tax_query);
-        }
-    }
-}
-add_action('woocommerce_product_query', 'ccc_add_custom_taxonomy_filters');
-
-
-
-
-
-
-
-
 function ccc_enqueue_scripts(): void
 {
     wp_enqueue_script('ccc-ajax-script', plugin_dir_url(__FILE__) . 'js/ccc-ajax.js', array('jquery'));
