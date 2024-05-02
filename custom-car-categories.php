@@ -139,6 +139,27 @@ function custom_taxonomy_filter($query) {
 add_action('pre_get_posts', 'custom_taxonomy_filter');
 
 
+/**
+ * Render the Car Brand and Model Filter widget in the shortcode
+ *
+ * @return string
+ */
+function ccc_render_filter_widget(): string
+{
+    ob_start();
+    the_widget('Car_Brand_Model_Filter_Widget');
+    return ob_get_clean();
+}
+
+/**
+ * Register the shortcode
+ */
+function ccc_register_shortcode(): void
+{
+    add_shortcode('car_brand_model_filter', 'ccc_render_filter_widget');
+}
+add_action('init', 'ccc_register_shortcode');
+
 
 /**
  * Add the required files
